@@ -1,5 +1,6 @@
 package com.example.quickaid.repositry
 
+import android.content.Context
 import android.util.Log
 import com.example.quickaid.models.Ambulance
 import com.example.quickaid.models.UserRole
@@ -7,6 +8,8 @@ import com.example.quickaid.supabase.SupabaseClientProvider
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.postgrest.postgrest
+import android.net.Uri
+import io.github.jan.supabase.storage.storage
 
 class AuthRepository {
 
@@ -199,5 +202,54 @@ class AuthRepository {
             "QuickAid",
             "Location Updated -> $lat , $lng"
         )
+    }
+
+    suspend fun signOut() {
+        client.auth.signOut()
+    }
+
+    suspend fun uploadProfileImage(
+        context: Context,
+        imageUri: Uri
+    ): String {
+
+        val user = client.auth.currentUserOrNull()
+            ?: throw Exception("User not logged in")
+
+        val fileName = "${user.id}.jpg"
+
+        val bytes = context.contentResolver
+            .openInputStream(imageUri)
+            ?.readBytes()
+            ?: throw Exception("Unable to read image")
+
+        client.storage
+            .from("profle_images")
+            .upload(
+                path = fileName,
+                data = bytes
+            ) {
+                upsert = true
+            }
+        val imageUrl = client.storage
+            .from("profle_images")
+            .publicUrl(fileName)
+
+        return imageUrl
+    }
+
+    suspend fun updateProfilePhoto(imageUrl: String) {
+
+        val user = client.auth.currentUserOrNull()
+            ?: throw Exception("User not logged in")
+
+        client.postgrest["ambulances"]
+            .update({
+                set("profile_photo", imageUrl)
+            }) {
+                filter {
+                    eq("auth_id", user.id)
+                }
+            }
     }
 }

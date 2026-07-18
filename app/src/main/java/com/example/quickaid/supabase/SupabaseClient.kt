@@ -1,5 +1,6 @@
 package com.example.quickaid.supabase
 
+import io.github.jan.supabase.storage.Storage
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.auth.Auth
@@ -19,5 +20,6 @@ object SupabaseClientProvider {
     ) {
         install(Auth)
         install(Postgrest)
+        install(Storage)
     }
 }

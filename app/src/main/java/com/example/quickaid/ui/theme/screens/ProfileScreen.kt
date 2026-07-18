@@ -1,5 +1,8 @@
 package com.example.quickaid.ui.theme.screens
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import android.util.Log
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.background
@@ -25,13 +28,21 @@ import androidx.navigation.NavController
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import android.content.Intent
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import coil.compose.AsyncImage
 import com.example.quickaid.service.LocationService
+import com.example.quickaid.ui.theme.navigation.Screen
+
 @Composable
 fun ProfileScreen(
     navController: NavController
 ) {
+
+    val context = LocalContext.current
 
     var isEditing by remember { mutableStateOf(false) }
     var active by remember { mutableStateOf(true) }
@@ -49,7 +60,43 @@ fun ProfileScreen(
         mutableStateOf<Ambulance?>(null)
     }
 
-    val context = LocalContext.current
+    var selectedImageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+
+    val imagePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+
+        if (uri != null) {
+
+            selectedImageUri = uri
+
+            scope.launch {
+
+                try {
+
+                    val imageUrl = withContext(Dispatchers.IO) {
+                        repository.uploadProfileImage(context, uri)
+                    }
+
+                    withContext(Dispatchers.IO) {
+                        repository.updateProfilePhoto(imageUrl)
+                    }
+
+                    ambulance = withContext(Dispatchers.IO) {
+                        repository.getProfile()
+                    }
+
+                } catch (e: Exception) {
+                    Log.e("QuickAid", "Image Upload Failed", e)
+                }
+
+            }
+        }
+    }
+
+
     LaunchedEffect(Unit) {
 
         try {
@@ -96,22 +143,66 @@ fun ProfileScreen(
         ) {
 
             Box(
-                modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape)
-                    .background(Color.LightGray)
-            )
-
-            FloatingActionButton(
-                onClick = {
-
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .offset(x = 45.dp, y = 45.dp)
-                    .size(48.dp)
+                modifier = Modifier.size(100.dp)
             ) {
-                Icon(Icons.Default.Edit, null)
+                when {
+                    selectedImageUri != null -> {
+
+                        AsyncImage(
+                            model = selectedImageUri,
+                            contentDescription = "Profile Photo",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+
+                    !ambulance?.profile_photo.isNullOrBlank() -> {
+
+                        AsyncImage(
+                            model = ambulance?.profile_photo,
+                            contentDescription = "Profile Photo",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+
+                    else -> {
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(CircleShape)
+                                .background(Color.LightGray),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = driverName.firstOrNull()?.uppercase() ?: "D",
+                                fontSize = 36.sp,
+                                color = Color.DarkGray
+                            )
+                        }
+                    }
+                }
+
+                SmallFloatingActionButton(
+                    onClick = {
+                        imagePicker.launch(
+                            PickVisualMediaRequest(
+                                ActivityResultContracts.PickVisualMedia.ImageOnly
+                            )
+                        )
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .offset(6.dp, 6.dp)
+                        .size(32.dp)
+                ) {
+                    Icon(Icons.Default.Edit, contentDescription = null)
+                }
             }
         }
 
@@ -297,11 +388,30 @@ fun ProfileScreen(
 
         OutlinedButton(
             onClick = {
+                scope.launch {
+                    try {
 
+                        withContext(Dispatchers.IO) {
+                            repository.signOut()
+                        }
+
+                        withContext(Dispatchers.Main) {
+                            navController.navigate(Screen.Login.route) {
+                                popUpTo(0) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
+                        }
+
+                    } catch (e: Exception) {
+                        Log.e("QuickAid", "Logout failed", e)
+                    }
+                }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Icon(Icons.Default.Edit, null)
+            Icon(Icons.Default.Delete, contentDescription = "Logout")
             Spacer(modifier = Modifier.width(8.dp))
             Text("Logout")
         }
