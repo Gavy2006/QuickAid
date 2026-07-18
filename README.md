@@ -1,129 +1,179 @@
-# QuickAid
+# 🚑 QuickAid - Emergency Ambulance Driver Application
 
-# 🚑 QuickAid
+QuickAid is an Android application built using **Kotlin**, **Jetpack Compose**, and **Supabase** to assist ambulance drivers in managing emergency requests, sharing live location, and maintaining driver information in real time.
 
-QuickAid is an Android application designed to make emergency ambulance services faster and more accessible. The platform connects **Patients**, **Hospitals**, and **Ambulance Drivers** through a single application, allowing real-time ambulance availability and efficient emergency response.
-
-> 🚧 **Project Status:** Under Active Development
+The application is designed with a modern Android architecture and focuses on fast, reliable, and real-time communication between emergency responders and the backend.
 
 ---
 
-## ✨ Features
+## 📱 Features
 
-### 👤 Patient
-- Sign Up & Login
-- Find nearby hospitals
-- View ambulance availability
-- Search hospitals by location
-- Profile management
+### Authentication
+- Driver Sign Up
+- Driver Login
+- Secure Session Management
+- Logout
 
-### 🏥 Hospital
-- Secure authentication
-- Manage hospital profile
-- Register ambulances
-- Update ambulance availability
-- View ambulance requests *(Coming Soon)*
+### Driver Profile
+- View Driver Details
+- Update Profile Information
+- Upload Profile Photo
+- Persistent Profile Image using Supabase Storage
 
-### 🚑 Driver
-- Secure authentication
-- Update availability status
-- Update current location
-- Manage profile
-- Accept emergency requests *(Coming Soon)*
+### Live Location
+- Foreground Location Service
+- Continuous GPS Tracking
+- Real-Time Location Updates
+- Driver Availability Status
 
----
-
-## 🛠 Tech Stack
-
-- Kotlin
-- Jetpack Compose
-- MVVM Architecture
+### Backend Integration
 - Supabase Authentication
-- Supabase Database (PostgreSQL)
-- Navigation Compose
+- Supabase Database
+- Supabase Storage
+- Real-Time Data Synchronization
+
+### Upcoming Features
+- Emergency Request Notifications
+- Accept / Reject Emergency Requests
+- Live Request Monitoring
+- Google Maps Navigation
+- Trip Status Management
+- Ride History
+
+---
+
+# 🛠 Tech Stack
+
+### Language
+- Kotlin
+
+### UI
+- Jetpack Compose
 - Material 3
 
+### Backend
+- Supabase
+  - Authentication
+  - PostgreSQL Database
+  - Storage
+
+### Architecture
+- Repository Pattern
+- Kotlin Coroutines
+- State Management with Compose
+
+### Android APIs
+- Fused Location Provider
+- Foreground Services
+- Runtime Permissions
+- Activity Result APIs
+
+### Libraries
+- Coil
+- Ktor Client
+- Kotlinx Serialization
+
 ---
 
-## 📂 Project Structure
+# 📂 Project Structure
 
 ```
-app/
- ├── ui/
- │   ├── Navigation/
- │   ├── BottomBar/
- │   ├── Authentication/
- │   ├── Components/
- │   └── Theme/
- ├── data/
- ├── network/
- ├── model/
- ├── repository/
- └── viewmodel/
+app
+│
+├── models
+├── navigation
+├── repository
+├── service
+├── supabase
+├── ui
+│   ├── screens
+│   ├── components
+│   └── theme
+└── utils
 ```
 
 ---
 
-## 🏗 Architecture
+# 🚀 Current Progress
 
+| Feature | Status |
+|----------|--------|
+| Driver Authentication | ✅ Completed |
+| Profile Management | ✅ Completed |
+| Profile Image Upload | ✅ Completed |
+| Supabase Storage | ✅ Completed |
+| Live GPS Updates | ✅ Completed |
+| Foreground Location Service | ✅ Completed |
+| Driver Availability | ✅ Completed |
+| Emergency Request Flow | 🚧 In Progress |
+| Google Maps Navigation | ⏳ Planned |
+
+---
+
+# 📸 Screenshots
+
+> Screenshots will be added soon.
+
+---
+
+# ⚙️ Installation
+
+### Clone the repository
+
+```bash
+git clone https://github.com/Gavy2006/QuickAid.git
 ```
-UI (Jetpack Compose)
-        │
-        ▼
- ViewModel (MVVM)
-        │
-        ▼
- Repository
-        │
-        ▼
- Supabase (Auth + Database)
-```
+
+### Open the project
+
+Open the project in **Android Studio**.
+
+### Configure Supabase
+
+Add your own:
+
+- Supabase URL
+- Supabase Anon Key
+
+inside your configuration file.
+
+### Run the application
+
+Build and run the application on an Android device or emulator.
 
 ---
 
-## 🚀 Current Progress
+# 🎯 Project Goal
 
-- ✅ Authentication
-- ✅ User Roles
-- ✅ Bottom Navigation
-- ✅ Hospital Listing UI
-- ✅ User Session Management
-- 🔄 Profile Management
-- 🔄 Ambulance Availability
-- 🔄 Driver Dashboard
-- ⏳ Emergency Request System
-- ⏳ Live Location Integration
+QuickAid aims to simplify emergency ambulance operations by providing drivers with:
+
+- Real-time emergency request handling
+- Live GPS tracking
+- Reliable backend synchronization
+- Modern Android user experience
+- Fast and secure communication
 
 ---
 
-## 📸 Screenshots
+# 📈 Future Improvements
 
-Screenshots will be added as development progresses.
-
----
-
-## 🎯 Future Enhancements
-
-- Real-time ambulance tracking
-- Push notifications
-- Google Maps integration
-- Route optimization
-- SOS emergency button
-- Hospital analytics dashboard
-- Request history
-- Admin panel
+- Push Notifications
+- Google Maps Route Navigation
+- Driver Analytics
+- Offline Location Caching
+- Multi-language Support
+- SOS Status Updates
+- Emergency Trip History
+- Driver Performance Dashboard
 
 ---
 
-## 👨‍💻 Developer
+# 👨‍💻 Author
 
 **Gavy**
 
-B.Tech (Electrical & Computer Engineering)
-
-UIET, Kurukshetra University
+- GitHub: https://github.com/Gavy2006
 
 ---
 
-⭐ If you like this project, consider giving it a star!
-
+⭐ If you found this project useful, consider giving it a star on GitHub.
