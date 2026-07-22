@@ -40,7 +40,7 @@ import com.example.quickaid.ui.theme.navigation.Screen
 @Composable
 fun ProfileScreen(
     navController: NavController
-) {
+) {  
 
     val context = LocalContext.current
 
